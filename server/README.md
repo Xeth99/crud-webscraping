@@ -22,7 +22,7 @@ Create A basic node application, that makes a CRUD operation (create, read, upda
 ```
 [
     {
-      organization: "node ninja",
+      organization: "node ninja", 
       createdAt: "2020-08-12T19:04:55.455Z",
       updatedAt: "2020-08-12T19:04:55.455Z",
       products: ["developers","pizza"],
