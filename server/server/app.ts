@@ -1,4 +1,5 @@
-import * as http, { IncomingMessage, Server, ServerResponse } from 'http';
+import http from 'http';
+import { IncomingMessage, Server, ServerResponse } from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
 

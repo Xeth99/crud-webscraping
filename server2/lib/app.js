@@ -1,77 +1,25 @@
 "use strict";
-// import axios from 'axios';
-// import cheerio from 'cheerio';
-// import http from 'http';
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMetaData = void 0;
-// interface MetaData {
-//   title: string;
-//   description: string;
-//   imageUrl: string;
-// }
-//   const url = 'https://facebook.com/';
-//  //console.log(parseUrl(url));
-// async function parseUrl(url: string): Promise<MetaData | null> {
-//     const response = await axios.get(url);
-//     const html = response.data;
-//     const $ = cheerio.load(html);
-//     const title = $('head title').text().trim();
-//     const description = $('meta[name="description"]').attr('content') || '';
-//     const imageUrl = $('meta[property="og:image"]').attr('content') || '';
-//     const metaData: MetaData = {
-//       title,
-//       description,
-//       imageUrl,
-//     };
-//     return metaData;
-//     // console.log(metaData);
-// }
-// parseUrl(url)
-//   .then((metaData) => {
-//     if (metaData) {
-//       console.log('Parsed Meta-Data:', metaData);
-//     } else {
-//       console.log('Failed to parse Meta-Data');
-//     }
-//   })
-//   .catch((error) => {
-//     console.error('Error:', error);
-//   });
-// const server = http.createServer(async (req, res) => {
-//   const url = req.url;
-//   if (url === '/parse') {
-//     const metaData = await parseUrl('https://facebook.com/');
-//     if (metaData) {
-//       res.writeHead(200, { 'Content-Type': 'application/json' });
-//       res.write(JSON.stringify(metaData));
-//     } else {
-//       res.writeHead(500, { 'Content-Type': 'text/plain' });
-//       res.write('Failed to parse Meta-Data');
-//     }
-//   } else {
-//     res.writeHead(404, { 'Content-Type': 'text/plain' });
-//     res.write('404 Not Found');
-//   }
-//   res.end();
-// });
-// server.listen(3005, () => {
-//   console.log('Server listening on port 3005');
-// });
-// module.exports = parseUrl;
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const http_1 = __importDefault(require("http"));
 const url_1 = __importDefault(require("url"));
 const targetUrl = 'https://www.facebook.com/';
+// interface Metadata {
+//   title?: string;
+//   description?: string;
+//   image?: string;
+// }
 async function getMetaData(url) {
-    // const browser = await puppeteer.launch({ headless: true });
     const browser = await puppeteer_1.default.launch({ headless: 'new' });
     const page = await browser.newPage();
     await page.goto(url);
     const metaData = await page.evaluate(() => {
         const metaTags = document.querySelectorAll('meta[property^="og:"]');
+        //const data: Metadata = {};
         const data = {};
         metaTags.forEach(tag => {
             const property = tag.getAttribute('property');
@@ -99,6 +47,15 @@ const server = http_1.default.createServer((req, res) => {
     if (parsedUrl.pathname === '/metadata') {
         // Handle metadata request
         getMetaData(targetUrl)
+            // .then(metadata => {
+            //   const response = {
+            //     title: metadata.title,
+            //     description: metadata.description,
+            //     image: metadata.image
+            //   };
+            //   res.writeHead(200, { 'Content-Type': 'application/json' });
+            //   res.end(JSON.stringify(response));
+            // })
             .then(metaData => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(metaData));
@@ -114,7 +71,7 @@ const server = http_1.default.createServer((req, res) => {
         res.end('Not Found');
     }
 });
-const PORT = 3005;
+const PORT = 4000;
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
